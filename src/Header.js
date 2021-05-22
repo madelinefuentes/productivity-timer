@@ -8,7 +8,8 @@ function Header() {
   const [showSettings, setShowSettings] = useState(false);
   const [focusTime, setFocusTime] = useState(ls.get('focusTime') || 25);
   const [breakTime, setBreakTime] = useState(ls.get('breakTime') || 5);
-  const [autoStartBreak, setAutoStartBreak] = useState(false)
+  const [autoStartBreak, setAutoStartBreak] = useState(ls.get('autoBreak') == 1 ? true : false);
+  const [intervals, setIntervals] = useState(ls.get('intervals') || 0);
 
   function openSettings(){
     setShowSettings(true)
@@ -28,8 +29,19 @@ function Header() {
     ls.set('breakTime', e.target.value)
   }
 
+  function updateIntervals(e){
+    setIntervals(e.target.value)
+    ls.set('intervals', e.target.value)
+  }
+
+  function updateAutoBreak(){
+    setAutoStartBreak(!autoStartBreak)
+    let val = autoStartBreak ? 0 : 1;
+    ls.set('autoBreak', val)
+  }
+
   return (
-    <div>
+    <>
       <Row>
         <Navbar bg="light" variant="light">
           <Col md={{ span: 4, offset: 2 }} className="d-flex justify-content-center">
@@ -37,43 +49,54 @@ function Header() {
           </Col>
           <Col md={{ span: 4, offsetRight: 2 }} className="d-flex justify-content-center">
             <button onClick = {()=>openSettings()} style={{ color: "#555555" }} className="btn btn-small shadow-none">
-              <i style={{ color: "#555555" }} className="fa fa-cog fa-lg"></i> settings</button>
+              <i style={{ color: "#555555" }} className="fa fa-cog fa-lg"></i><span className="d-none d-sm-inline"> settings</span></button>
           </Col>
         </Navbar>
       </Row>
-      <Modal show={showSettings} onHide={closeSettings}>
+      <Modal dialogClassName='modal-container' size = "sm" show={showSettings} onHide={closeSettings} aria-labelledby="contained-modal-title-vcenter">
         <Modal.Header closeButton>
           <Modal.Title style = {{color:'#bfbfbf'}}>Timer Settings</Modal.Title>
         </Modal.Header>
         <Modal.Body className="show-grid" style = {{fontWeight: '700'}}>
-          <Container fluid>
-            <Row style = {{paddingTop: '10px'}}>
-              <Col className = "align-items-center">
-                <p style = {{color:'#555555', paddingRight:'40px'}}>Time (Minutes)</p>
-              </Col>
+          <Container>
+            <Row className="align-items-center">
               <Col>
-                <label style = {{color: "#bfbfbf"}}>Pomodoro</label>
-                <input onChange = {updateFocusTime} value = {focusTime} style={{width: "90px"}} length = "10" type = "number" className="form-control shadow-none"/>
+                <div>
+                  <label style = {{color: "#555555"}}>Pomodoro</label>
+                  <input onChange = {updateFocusTime} value = {focusTime} style={{width: "90px"}} length = "10" type = "number" className="form-control shadow-none"/>
+                </div>
               </Col>
-              <Col>
-                <label style = {{color: "#bfbfbf"}} >Break</label>
-                <input onChange = {updateBreakTime} value = {breakTime} style={{width: "90px"}} length = "10" type = "number" className="form-control shadow-none"/>
+              <Col className = "d-flex justify-content-end">
+                <div>
+                  <label style = {{color: "#555555"}} >Break</label>
+                  <input onChange = {updateBreakTime} value = {breakTime} style={{width: "90px"}} length = "10" type = "number" className="form-control shadow-none"/>
+                </div>
               </Col>
             </Row>
-            <Row style = {{paddingTop: '40px'}}>
-              <Col>
-                <p style = {{color:'#555555', paddingRight:'40px'}}>Auto Start Break</p>
+            <Row style = {{marginTop: "20px"}} className="align-items-center border-top">
+              <Col style = {{marginTop: "10px"}}>
+                <div style = {{color:'#555555'}}>Auto Start Break</div>
               </Col>
-              <Col>
-                <div style= {{width:'70px'}} className='custom-control custom-switch'>
+              <Col className = "d-flex justify-content-end">
+                <div className='custom-control custom-switch'>
                   <input
                     type='checkbox'
                     className='custom-control-input shadow-none'
                     id='customSwitches'
+                    checked = {autoStartBreak}
+                    onChange = {updateAutoBreak}
                   />
                   <label className='custom-control-label' htmlFor='customSwitches'>
                   </label>
                 </div>
+              </Col>
+            </Row>
+            <Row style = {{marginTop: "20px"}} className="align-items-center border-top">
+              <Col style = {{marginTop: "10px"}}>
+                <div style = {{color:'#555555'}}>Auto Start Intervals</div>
+              </Col>
+              <Col className = "d-flex justify-content-end">
+                <input onChange = {updateIntervals} value = {intervals} style={{width: "70px"}} length = "2" type = "number" className="form-control shadow-none"/>
               </Col>
             </Row>
           </Container>
@@ -87,8 +110,10 @@ function Header() {
       <Timer
         focusTime = {focusTime * 60}
         breakTime = {breakTime * 60}
+        autoStartBreak = {autoStartBreak}
+        intervals = {intervals}
       />
-    </div>
+    </>
   );
 }
   

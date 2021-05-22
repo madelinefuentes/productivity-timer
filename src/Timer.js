@@ -3,43 +3,73 @@ import {Row, Col, ButtonGroup, ToggleButton} from 'react-bootstrap';
 import LiquidFillGauge from 'react-liquid-gauge';
 
 function Timer(props) {
-    const [elapsedTime, setElapsedTime] = useState(0)
+    const [elapsedTime, setElapsedTime] = useState(0);
     const [startTime, setStartTime] = useState(0);
     const [timerOn, setTimerOn] = useState(false);
     const [pomodoro, setPomodoro] = useState(true);
+    const [currInterval, setCurrInterval] = useState(0);
 
     useEffect(
       () => {
         var start = Date.now();
         if (timerOn) {
           const timer = setInterval(() => {
-            setElapsedTime(startTime + Math.floor((Date.now() - start)/1000))
+            let time = startTime + Math.floor((Date.now() - start)/1000)
+            setElapsedTime(time)
+
+            if(pomodoro && time === props.focusTime){
+              clearInterval(timer)
+              if(props.autoStartBreak){
+                startBreak();
+              }
+              else{
+                pressBreak();
+              }
+            } 
+
+            if(!pomodoro && time === props.breakTime){
+              clearInterval(timer)
+              if(currInterval < props.intervals){
+                setCurrInterval(currInterval + 1);
+                startPomodoro();
+              }
+            }
         }, 100);
           return () => clearInterval(timer);
         }
       },
-      [timerOn, startTime ]
+      [timerOn, startTime, pomodoro, props.focusTime, props.autoStartBreak]
     );
 
     function startTimer(){
-      setTimerOn(true)
+      setTimerOn(true);
     }
 
     function pauseTimer(){
-      setTimerOn(false)
-      setStartTime(elapsedTime)
+      setTimerOn(false);
+      setStartTime(elapsedTime);
     }
 
     function startPomodoro(){
-      setPomodoro(true)
-      setTimerOn(false)
-      setElapsedTime(0)
+      setPomodoro(true);
+      setStartTime(0)
+      setElapsedTime(0);
     }
 
     function startBreak(){
-      setPomodoro(false)
-      setTimerOn(false)
-      setElapsedTime(0)
+      setPomodoro(false);
+      setStartTime(0)
+      setElapsedTime(0);
+    }
+
+    function pressPomodoro(){
+      setTimerOn(false);
+      startPomodoro();
+    }
+
+    function pressBreak(){
+      setTimerOn(false);
+      startBreak();
     }
 
     function getRemainingTime(){
@@ -69,7 +99,7 @@ function Timer(props) {
               variant="outline-secondary"
               name="radio"
               checked={pomodoro}
-              onChange={() => startPomodoro()}
+              onChange={() => pressPomodoro()}
               value = "1"
               className="shadow-none"
             >
@@ -80,7 +110,7 @@ function Timer(props) {
               variant="outline-secondary"
               name="radio"
               checked={!pomodoro}
-              onChange={() => startBreak()}
+              onChange={() => pressBreak()}
               value = "2"
               className="shadow-none"
             >
@@ -91,7 +121,7 @@ function Timer(props) {
         <Col xs="col-12" className="d-flex justify-content-center">
           <LiquidFillGauge
             style={{ margin: '0 auto'}}
-            value={!timerOn && elapsedTime == 0 ? 30: remainingPercentage()}
+            value={!timerOn && elapsedTime === 0 ? 30: remainingPercentage()}
             width= {250}
             height={300}
             percent="%"
