@@ -1,12 +1,14 @@
 import Container from 'react-bootstrap/Container'
 import Header from './Header'
-import Timer from './Timer'
+import {Route} from "react-router-dom"
 
 function App() {
   return (
-    <Container fluid>
-      <Header/>
-    </Container>
+    <Route exact path = "/">
+      <Container fluid>
+        <Header/>
+      </Container>
+    </Route>
   );
 }
 
