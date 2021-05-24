@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import {Row, Col, ButtonGroup, ToggleButton} from 'react-bootstrap';
 import LiquidFillGauge from 'react-liquid-gauge';
+import ls from 'local-storage';
 
 function Timer(props) {
     const [elapsedTime, setElapsedTime] = useState(0);
@@ -8,17 +9,22 @@ function Timer(props) {
     const [timerOn, setTimerOn] = useState(false);
     const [pomodoro, setPomodoro] = useState(true);
     const [currInterval, setCurrInterval] = useState(0);
+    const [date, setDate] = useState(ls.get("date") || "");
+    const [studyTime, setStudyTime] = useState(ls.get("studyTime") || 0);
 
     useEffect(
       () => {
         var start = Date.now();
         if (timerOn) {
           const timer = setInterval(() => {
-            let time = startTime + Math.floor((Date.now() - start)/1000)
-            setElapsedTime(time)
+            let time = startTime + Math.floor((Date.now() - start)/1000);
+            setElapsedTime(time);
 
             if(pomodoro && time === props.focusTime){
-              clearInterval(timer)
+              clearInterval(timer);
+              props.playSound();
+              setStudyTime(props.focusTime + studyTime)
+              ls.set('studyTime', props.focusTime + studyTime);
               if(props.autoStartBreak){
                 startBreak();
               }
@@ -28,14 +34,25 @@ function Timer(props) {
             } 
 
             if(!pomodoro && time === props.breakTime){
-              clearInterval(timer)
+              clearInterval(timer);
+              props.playSound();
               if(currInterval < props.intervals){
                 setCurrInterval(currInterval + 1);
                 startPomodoro();
               }
+              else{
+                pressBreak();
+              }
             }
         }, 100);
           return () => clearInterval(timer);
+        }
+
+        if(date != new Date(start).getDate()){
+          setStudyTime(0);
+          ls.set('studyTime', 0);
+          ls.set('date', new Date(start).getDate())
+          setDate(new Date(start).getDate());
         }
       },
       [timerOn, startTime, pomodoro, props.focusTime, props.autoStartBreak]
@@ -52,13 +69,13 @@ function Timer(props) {
 
     function startPomodoro(){
       setPomodoro(true);
-      setStartTime(0)
+      setStartTime(0);
       setElapsedTime(0);
     }
 
     function startBreak(){
       setPomodoro(false);
-      setStartTime(0)
+      setStartTime(0);
       setElapsedTime(0);
     }
 
@@ -85,14 +102,17 @@ function Timer(props) {
     }
 
     function remainingPercentage(){
-      if(pomodoro) return Math.floor(elapsedTime/props.focusTime * 100)
-      else return Math.floor(elapsedTime/props.breakTime * 100)
+      if(pomodoro) return Math.floor(elapsedTime/props.focusTime * 100);
+      else return Math.floor(elapsedTime/props.breakTime * 100);
     }
 
     return (
       <>
       <Row>
-        <Col style = {{paddingTop: '50px'}} xs="col-12" className="d-flex justify-content-center">
+        <Col style = {{paddingTop: '25px'}} xs="col-12" className="d-flex justify-content-center">
+          <div>Today's Focus Time: {Math.floor(studyTime/3600)}h {Math.floor((studyTime % 3600)/60)}m</div>
+        </Col>
+        <Col style = {{paddingTop: '25px'}} xs="col-12" className="d-flex justify-content-center">
           <ButtonGroup toggle>
             <ToggleButton
               type="radio"
