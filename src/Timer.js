@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import {Row, Col, ButtonGroup, ToggleButton} from 'react-bootstrap';
 import LiquidFillGauge from 'react-liquid-gauge';
 import ls from 'local-storage';
+import TodoList from './TodoList'
 
 function Timer(props) {
     const [elapsedTime, setElapsedTime] = useState(0);
@@ -11,6 +12,28 @@ function Timer(props) {
     const [currInterval, setCurrInterval] = useState(0);
     const [date, setDate] = useState(ls.get("date") || "");
     const [studyTime, setStudyTime] = useState(ls.get("studyTime") || 0);
+
+    const [todoList, setTodoList] = useState([]);
+
+    useEffect(()=>{
+      if(localStorage.getItem("todoList")){
+        setTodoList(JSON.parse(localStorage.getItem("todoList")));
+      }
+      console.log(todoList)
+    }, []);
+
+    function addTask(values){
+      let updateTodoList = [...(todoList || []), 
+        {task: values.task, intervals: values.intervals, currInterval: 0, id: Date.now()}];
+      setTodoList(updateTodoList);
+      localStorage.setItem('todoList', JSON.stringify(updateTodoList));
+    }
+
+    function removeTask(id){
+      let updateTodoList = todoList.filter((todo) => todo.id !== id);
+      setTodoList(updateTodoList);
+      localStorage.setItem('todoList', JSON.stringify(updateTodoList));
+    }
 
     useEffect(
       () => {
@@ -108,7 +131,7 @@ function Timer(props) {
 
     return (
       <>
-      <Row>
+      <Row style = {{paddingBottom: "50px"}}>
         <Col style = {{paddingTop: '25px'}} xs="col-12" className="d-flex justify-content-center">
           <div>Today's Focus Time: {Math.floor(studyTime/3600)}h {Math.floor((studyTime % 3600)/60)}m</div>
         </Col>
@@ -182,6 +205,11 @@ function Timer(props) {
             : <button style={{ width: "100px" }} className="btn btn-outline-secondary shadow-none" onClick={() => startTimer()}>Start</button>}
         </Col>
       </Row>
+      <TodoList 
+        addTask={addTask} 
+        todoList={todoList} 
+        removeTask = {removeTask}
+      />
       </>
     );
 }
