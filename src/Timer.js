@@ -14,6 +14,7 @@ function Timer(props) {
     const [studyTime, setStudyTime] = useState(ls.get("studyTime") || 0);
 
     const [todoList, setTodoList] = useState([]);
+    const [currentTask, setCurrentTask] = useState(null);
 
     useEffect(()=>{
       if(localStorage.getItem("todoList")){
@@ -24,15 +25,35 @@ function Timer(props) {
 
     function addTask(values){
       let updateTodoList = [...(todoList || []), 
-        {task: values.task, intervals: values.intervals, currInterval: 0, id: Date.now()}];
+        {task: values.task, intervals: values.intervals, currInterval: 0, id: Date.now(), complete: false}];
       setTodoList(updateTodoList);
       localStorage.setItem('todoList', JSON.stringify(updateTodoList));
     }
 
     function removeTask(id){
+      if(id === currentTask){
+        setCurrentTask(null);
+      }
       let updateTodoList = todoList.filter((todo) => todo.id !== id);
       setTodoList(updateTodoList);
       localStorage.setItem('todoList', JSON.stringify(updateTodoList));
+    }
+
+    function completeTask(id){
+      let updateTodoList = [...todoList];
+      let index = todoList.findIndex(todo => todo.id === id);
+      updateTodoList[index].complete = !updateTodoList[index].complete;
+      setTodoList(updateTodoList);
+      localStorage.setItem('todoList', JSON.stringify(updateTodoList));
+    }
+
+    function updateCurrentTask(id){
+      if(currentTask === id){
+        setCurrentTask(null);
+      }
+      else{
+        setCurrentTask(id);
+      }
     }
 
     useEffect(
@@ -71,7 +92,7 @@ function Timer(props) {
           return () => clearInterval(timer);
         }
 
-        if(date != new Date(start).getDate()){
+        if(date !== new Date(start).getDate()){
           setStudyTime(0);
           ls.set('studyTime', 0);
           ls.set('date', new Date(start).getDate())
@@ -205,10 +226,18 @@ function Timer(props) {
             : <button style={{ width: "100px" }} className="btn btn-outline-secondary shadow-none" onClick={() => startTimer()}>Start</button>}
         </Col>
       </Row>
+      <div className="d-flex justify-content-center" style = {{marginBottom: '20px'}}>
+        {currentTask != null ? (
+          <div><b>Current Task: </b>{todoList.filter(todo => todo.id == currentTask)[0].task}</div>
+        ) : <div>&nbsp;</div>}
+      </div>
       <TodoList 
         addTask={addTask} 
         todoList={todoList} 
         removeTask = {removeTask}
+        completeTask = {completeTask}
+        currentTask = {currentTask}
+        updateCurrentTask = {updateCurrentTask}
       />
       </>
     );
