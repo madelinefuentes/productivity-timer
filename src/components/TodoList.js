@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {Row, Col} from 'react-bootstrap'; 
-import '../src/styling/TodoList.scss'
+import '../styling/TodoList.scss'
 
 const initialFormValues = {
   task: "",
@@ -10,8 +10,6 @@ const initialFormValues = {
 function TodoList(props) {
   const [formValues, setFormValues] = useState(initialFormValues);
   const [showForm, setShowForm] = useState(false);
-  const [deletionIndex, setDeletionIndex] = useState(null);
-  const [completionIndex, setCompletionIndex] = useState(null);
 
   function handleInputChange(e){
     const {name, value} = e.target;
@@ -23,7 +21,7 @@ function TodoList(props) {
   };
 
   function addTask(){
-    props.addTask(formValues)
+    props.addTask(formValues);
     setFormValues(initialFormValues);
     setShowForm(false);
   }
@@ -37,8 +35,10 @@ function TodoList(props) {
     props.completeTask(id);
   }
 
-  function setCurrentTask(id){
-    props.updateCurrentTask(id);
+  function setCurrentTask(id, complete){
+    if(!complete){
+      props.updateCurrentTask(id);
+    }
   }
 
   return (
@@ -55,12 +55,14 @@ function TodoList(props) {
               <tr
                 //onMouseEnter={() => setDeletionIndex(todo.id)} 
                 //onMouseLeave={() => setDeletionIndex(null)}
-                onClick = {() => setCurrentTask(todo.id)}
-                style = {{cursor: "pointer"}}
+                onClick = {() => setCurrentTask(todo.id, todo.complete)}
+                style = {{cursor: todo.complete ? "" : "pointer"}}
+                key = {todo.id}
               >
                 <td>
                   <Row className="align-items-center" 
-                    style = {{borderLeft: todo.id === props.currentTask ? '5px solid #5AB9EA' : '1px solid #D3D3D3', border: '1px solid #D3D3D3', borderRadius: '5px', paddingTop: '10px', paddingBottom: '10px', margin:'0px'}}>
+                    style = {{borderLeft: todo.id === props.currentTask ? '5px solid #5AB9EA' : '1px solid #D3D3D3', borderBottom: '1px solid #D3D3D3',
+                    borderTop: '1px solid #D3D3D3', borderRight: '1px solid #D3D3D3', borderRadius: '5px', paddingTop: '10px', paddingBottom: '10px', margin:'0px'}}>
                     <Col>
                       <div style = {{textDecoration: todo.complete ? "line-through" : ""}}>{todo.task}</div>
                     </Col>
@@ -69,7 +71,7 @@ function TodoList(props) {
                     </Col>
                     <Col className = "d-flex justify-content-end">
                       <button 
-                        style={{ color: todo.complete ? "green" : "#C8C8C8"}} 
+                        style={{ color: todo.complete ? "#09D668" : "#C8C8C8"}} 
                         onClick={(e)=>completeTask(e, todo.id)}
                         className="btn btn-small shadow-none">
                         <i className="fa fa-check-circle fa-lg"></i></button>
@@ -108,20 +110,19 @@ function TodoList(props) {
                         onChange={handleInputChange}
                         className="form-control shadow-none"
                         style={{ width: '40px' }}
-                        size="1"
                       />
                     </div>
                   </Col>
-                  <Col xs={{ span: 3, offset: 3 }} className="d-flex justify-content-center">
+                  <Col sm={{ span: 3, offset: 3 }} className="d-flex justify-content-center">
                     <button type="button" style={{ width: "80px" }} className="btn btn-outline-secondary shadow-none" onClick={() => setShowForm(false)}>Cancel</button>
                   </Col>
-                  <Col xs={{ span: 3, offsetRight: 3 }} className="d-flex justify-content-center">
+                  <Col sm={{ span: 3, offsetRight: 3 }} className="d-flex justify-content-center">
                     <button
                       type="button"
                       style={{ width: "80px" }}
                       className="btn btn-outline-secondary shadow-none"
                       onClick={() => addTask()}
-                      disabled={formValues.task == '' || formValues.intervals == '' || parseInt(formValues.intervals) < 1}>
+                      disabled={formValues.task === '' || formValues.intervals === '' || parseInt(formValues.intervals) < 1}>
                       Add</button>
                   </Col>
                 </Row>

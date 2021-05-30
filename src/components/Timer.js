@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import {Row, Col, ButtonGroup, ToggleButton} from 'react-bootstrap';
 import LiquidFillGauge from 'react-liquid-gauge';
 import ls from 'local-storage';
-import TodoList from './TodoList'
+import TodoList from './TodoList';
 
 function Timer(props) {
     const [elapsedTime, setElapsedTime] = useState(0);
@@ -20,7 +20,6 @@ function Timer(props) {
       if(localStorage.getItem("todoList")){
         setTodoList(JSON.parse(localStorage.getItem("todoList")));
       }
-      console.log(todoList)
     }, []);
 
     function addTask(values){
@@ -40,6 +39,9 @@ function Timer(props) {
     }
 
     function completeTask(id){
+      if(id === currentTask){
+        setCurrentTask(null);
+      }
       let updateTodoList = [...todoList];
       let index = todoList.findIndex(todo => todo.id === id);
       updateTodoList[index].complete = !updateTodoList[index].complete;
@@ -56,6 +58,28 @@ function Timer(props) {
       }
     }
 
+    function incrementCurrentTask(){
+      if(currentTask != null){
+        let updateTodoList = [...todoList];
+        let currentTaskIndex = todoList.findIndex(todo => todo.id === currentTask);
+        let current = updateTodoList[currentTaskIndex].currInterval;
+        let totalIntervals = updateTodoList[currentTaskIndex].intervals;
+        
+        if(current < totalIntervals){
+          updateTodoList[currentTaskIndex].currInterval = current + 1;
+        }
+
+        console.log('current interval: ' + updateTodoList[currentTaskIndex].currInterval);
+        if(current + 1 >= totalIntervals){
+          updateTodoList[currentTaskIndex].complete = true;
+          setCurrentTask(null);
+        }
+
+        setTodoList(updateTodoList);
+        localStorage.setItem('todoList', JSON.stringify(updateTodoList));
+      }
+    }
+
     useEffect(
       () => {
         var start = Date.now();
@@ -67,7 +91,8 @@ function Timer(props) {
             if(pomodoro && time === props.focusTime){
               clearInterval(timer);
               props.playSound();
-              setStudyTime(props.focusTime + studyTime)
+              incrementCurrentTask();
+              setStudyTime(props.focusTime + studyTime);
               ls.set('studyTime', props.focusTime + studyTime);
               if(props.autoStartBreak){
                 startBreak();
@@ -206,10 +231,10 @@ function Timer(props) {
             waveFrequency={2}
             waveAmplitude={timerOn ? 0 : 1}
             circleStyle={{
-              fill: pomodoro ? "#5AB9EA" : "#FFC834"
+              fill: pomodoro ? "#5AB9EA" : "#FFBD0B"
             }}
             waveStyle={{
-              fill: pomodoro ? "#5AB9EA" : "#FFC834"
+              fill: pomodoro ? "#5AB9EA" : "#FFBD0B"
             }}
             textStyle={{
               fill: "#555555",
@@ -227,8 +252,8 @@ function Timer(props) {
         </Col>
       </Row>
       <div className="d-flex justify-content-center" style = {{marginBottom: '20px'}}>
-        {currentTask != null ? (
-          <div><b>Current Task: </b>{todoList.filter(todo => todo.id == currentTask)[0].task}</div>
+        {currentTask != null && todoList.filter(todo => todo.id === currentTask).length > 0 ? (
+          <div><b>Current Task: </b>{todoList.filter(todo => todo.id === currentTask)[0].task}</div>
         ) : <div>&nbsp;</div>}
       </div>
       <TodoList 
