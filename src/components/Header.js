@@ -5,6 +5,7 @@ import ls from 'local-storage';
 import '../styling/Header.scss';
 import useSound from 'use-sound';
 import bell from '../sounds/bell.mp3';
+import { NewTimer } from '../components/NewTimer'
 
 function Header() {
   const [showSettings, setShowSettings] = useState(false);
@@ -168,13 +169,14 @@ function Header() {
           </button>
         </Modal.Footer>
       </Modal>
-      <Timer
+      {/* <Timer
         focusTime = {focusTime * 60}
         breakTime = {breakTime * 60}
         autoStartBreak = {autoStartBreak}
         intervals = {intervals}
         playSound = {playSound}
-      />
+      /> */}
+      <NewTimer sessionTime={30}/>
     </>
   );
 }

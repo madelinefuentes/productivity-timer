@@ -16,10 +16,11 @@
     "local-storage": "^2.0.0",
     "package": "^1.0.1",
     "react": "^17.0.2",
+    "react-bootstrap": "^2.7.4",
     "react-dom": "^17.0.2",
     "react-liquid-gauge": "^1.2.4",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "4.0.3",
+    "react-scripts": "^5.0.1",
     "sass": "^1.32.13",
     "use-sound": "^3.0.1",
     "web-vitals": "^1.1.2"
@@ -49,5 +50,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.2"
   }
 }
