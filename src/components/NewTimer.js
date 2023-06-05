@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { TimerDisplay } from "./TimerDisplay";
 
-export function NewTimer({ sessionMinutes = 30 }) {
+export function NewTimer({ isFocused, focusTime, breakTime }) {
+    const sessionMinutes = isFocused ? focusTime : breakTime;
     const [elapsedTime, setElapsedTime] = useState(0);
     const [lastStartTime, setLastStartTime] = useState(0);
     const [timerIsOn, setTimerIsOn] = useState(false);
@@ -16,6 +17,14 @@ export function NewTimer({ sessionMinutes = 30 }) {
       const secondsString = remainingTime % 60 < 10 ? '0' + remainingTime % 60 : remainingTime % 60;
       return `${minutes}:${secondsString}`
     }
+
+    useEffect(() => {
+      setElapsedTime(0);
+      setLastStartTime(0);
+      setCurrentTimeString(getFormattedTime(0, sessionMinutes * 60));
+      setRemainingPercentage(0);
+      setTimerIsOn(false);
+    }, [isFocused]);
   
     useEffect(() => {
       let intervalId = null;
@@ -52,6 +61,7 @@ export function NewTimer({ sessionMinutes = 30 }) {
         currentTimeString={currentTimeString}
         elapsedTime={elapsedTime}
         remainingPercentage={remainingPercentage}
+        isFocused={isFocused}
       />
     );
   }

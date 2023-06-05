@@ -5,7 +5,7 @@ import ls from 'local-storage';
 import '../styling/Header.scss';
 import useSound from 'use-sound';
 import bell from '../sounds/bell.mp3';
-import { NewTimer } from '../components/NewTimer'
+import { TimerContainer } from '../components/TimerContainer'
 
 function Header() {
   const [showSettings, setShowSettings] = useState(false);
@@ -176,7 +176,7 @@ function Header() {
         intervals = {intervals}
         playSound = {playSound}
       /> */}
-      <NewTimer sessionTime={30}/>
+      <TimerContainer focusTime={focusTime} breakTime={breakTime}/>
     </>
   );
 }

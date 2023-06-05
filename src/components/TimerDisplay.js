@@ -7,14 +7,14 @@ export function TimerDisplay({
   currentTimeString,
   elapsedTime,
   remainingPercentage,
+  isFocused
 }) {
   const buttonClass =
     "rounded-md ring-1 ring-inset ring-gray-500 text-gray-500 hover:bg-gray-600 hover:text-slate-100 px-4 py-2 w-24 transition duration-200 ease-in-out";
 
   return (
-    <div className="flex flex-col items-center">
+    <div className='flex flex-col items-center'>
       <LiquidFillGauge
-        style={{ margin: "0 auto" }}
         value={
           !timerIsOn && elapsedTime === 0 ? 30 : remainingPercentage
         }
@@ -40,10 +40,10 @@ export function TimerDisplay({
         waveFrequency={2}
         waveAmplitude={timerIsOn ? 0 : 1}
         circleStyle={{
-          fill: true ? "#5AB9EA" : "#FFBD0B",
+          fill: isFocused ? "#5AB9EA" : "#FFBD0B",
         }}
         waveStyle={{
-          fill: true ? "#5AB9EA" : "#FFBD0B",
+          fill: isFocused ? "#5AB9EA" : "#FFBD0B",
         }}
         textStyle={{
           fill: "#555555",
