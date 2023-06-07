@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {Row, Col} from 'react-bootstrap'; 
-import '../styling/TodoList.scss'
 
 const initialFormValues = {
   task: "",

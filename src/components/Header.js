@@ -2,7 +2,6 @@ import {Navbar, Row, Col, Modal, Container} from 'react-bootstrap';
 import {useState} from 'react';
 import Timer from './Timer';
 import ls from 'local-storage';
-import '../styling/Header.scss';
 import useSound from 'use-sound';
 import bell from '../sounds/bell.mp3';
 import { TimerContainer } from '../components/TimerContainer'

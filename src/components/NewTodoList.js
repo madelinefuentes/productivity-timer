@@ -11,6 +11,14 @@ export function NewTodoList() {
     }
   }, []);
 
+  function addTask(taskName, pomodoros) {
+    const id = Symbol(id);
+    setTodoList((todoList) => [
+      ...todoList,
+      { id, taskName, pomodoros, currentIntervals: 0, complete: false },
+    ]);
+  }
+
   return (
     <div className="w-[475px] pt-10 flex flex-col">
       <div
@@ -19,11 +27,11 @@ export function NewTodoList() {
       >
         Todo List
       </div>
-      {todoList.map((todoListItem, i) => {
-        return <div>{todoListItem}</div>;
+      {todoList.map(todoListItem => {
+        return <div key={todoListItem.id}>{todoListItem}</div>;
       })}
       {showAddTodoForm ? (
-        <AddTodoForm setShowAddTodoForm={setShowAddTodoForm}/>
+        <AddTodoForm setShowAddTodoForm={setShowAddTodoForm} addTask={addTask}/>
       ) : (
         <button
           className="rounded-md ring-1 ring-inset ring-gray-500 text-gray-500 hover:bg-gray-600 hover:text-slate-100 px-3 py-2 w-28 transition duration-200 ease-in-out self-center mt-4"
