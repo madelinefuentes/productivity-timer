@@ -1,4 +1,3 @@
-import {Navbar, Row, Col, Modal, Container} from 'react-bootstrap';
 import {useState} from 'react';
 import Timer from './Timer';
 import ls from 'local-storage';
@@ -74,7 +73,7 @@ function Header() {
 
   return (
     <>
-      <Row>
+      {/* <Row>
         <Navbar bg="light" variant="light">
           <Col md={{ span: 3, offset: 3 }} className="d-flex justify-content-begin">
             <Navbar.Brand style={{ fontWeight: '300' }}> Productivity Timer</Navbar.Brand>
@@ -131,24 +130,6 @@ function Header() {
                 <input onChange = {updateIntervals} value = {intervals} style={{width: "70px"}} length = "2" type = "number" className="form-control shadow-none"/>
               </Col>
             </Row>
-            {/* <Row style = {{marginTop: "20px"}} className="align-items-center border-top">
-              <Col style = {{marginTop: "10px"}}>
-                <div style = {{color:'#555555'}}>Browser Notification</div>
-              </Col>
-              <Col className = "d-flex justify-content-end">
-                <div className='custom-control custom-switch'>
-                  <input
-                    type='checkbox'
-                    className='custom-control-input shadow-none'
-                    id='notificationSwitch'
-                    checked = {notificationOn}
-                    onChange = {updateNotification}
-                  />
-                  <label className='custom-control-label' htmlFor='notificationSwitch'>
-                  </label>
-                </div>
-              </Col>
-            </Row> */}
             <Row style = {{marginTop: "20px"}} className="align-items-center border-top">
               <Col>
                 <div style = {{color:'#555555'}}>Alarm</div>
@@ -167,7 +148,7 @@ function Header() {
             Close
           </button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
       {/* <Timer
         focusTime = {focusTime * 60}
         breakTime = {breakTime * 60}

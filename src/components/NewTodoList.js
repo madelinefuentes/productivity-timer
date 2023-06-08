@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { AddTodoForm } from "./AddTodoForm";
+import { TodoListItem } from './TodoListItem';
+import { v4 as uuidv4 } from 'uuid';
 
 export function NewTodoList() {
   const [todoList, setTodoList] = useState([]);
@@ -11,11 +13,11 @@ export function NewTodoList() {
     }
   }, []);
 
-  function addTask(taskName, pomodoros) {
-    const id = Symbol(id);
+  function addTask(taskName, pomodoroTarget) {
+    const id = uuidv4();
     setTodoList((todoList) => [
       ...todoList,
-      { id, taskName, pomodoros, currentIntervals: 0, complete: false },
+      { id, taskName, pomodoros: 0, pomodoroTarget, complete: false },
     ]);
   }
 
@@ -25,16 +27,14 @@ export function NewTodoList() {
         className="text-lg font-bold border-b-2 border-b-slate-700"
         style={{}}
       >
-        Todo List
+        <h1>Todo List</h1>
       </div>
-      {todoList.map(todoListItem => {
-        return <div key={todoListItem.id}>{todoListItem}</div>;
-      })}
+      {todoList.map(todoListItem => <TodoListItem todoItem={todoListItem}/>)}
       {showAddTodoForm ? (
         <AddTodoForm setShowAddTodoForm={setShowAddTodoForm} addTask={addTask}/>
       ) : (
         <button
-          className="rounded-md ring-1 ring-inset ring-gray-500 text-gray-500 hover:bg-gray-600 hover:text-slate-100 px-3 py-2 w-28 transition duration-200 ease-in-out self-center mt-4"
+          className="rounded-md ring-1 ring-inset ring-gray-500 text-gray-500 hover:bg-gray-600 hover:text-slate-100 px-3 py-2 w-28 transition duration-200 ease-in-out self-center mt-4 mb-36"
           onClick={() => setShowAddTodoForm(true)}
         >
           Add a Task
