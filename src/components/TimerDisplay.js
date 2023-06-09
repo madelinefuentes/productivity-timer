@@ -1,23 +1,29 @@
-import LiquidFillGauge from 'react-liquid-gauge';
+import LiquidFillGauge from "react-liquid-gauge";
 
 export function TimerDisplay({
   timerIsOn,
-  startTimer,
-  pauseTimer,
-  currentTimeString,
   elapsedTime,
-  remainingPercentage,
-  isFocused
+  isFocused,
+  sessionMinutes,
 }) {
-  const buttonClass =
-    "rounded-md ring-1 ring-inset ring-gray-500 text-gray-500 hover:bg-gray-600 hover:text-slate-100 px-4 py-2 w-24 transition duration-200 ease-in-out";
+
+  function getFormattedTime(passedTime, totalTime) {
+    const remainingTime = totalTime - passedTime;
+    const minutes = Math.floor(remainingTime / 60);
+    const secondsString =
+      remainingTime % 60 < 10 ? "0" + (remainingTime % 60) : remainingTime % 60;
+    return `${minutes}:${secondsString}`;
+  }
+
+  const currentTimeString = getFormattedTime(elapsedTime, sessionMinutes);
+  const remainingPercentage = Math.floor(
+    (elapsedTime / (sessionMinutes * 60)) * 100
+  );
 
   return (
-    <div className='flex flex-col items-center'>
+    <div className="flex flex-col items-center">
       <LiquidFillGauge
-        value={
-          !timerIsOn && elapsedTime === 0 ? 30 : remainingPercentage
-        }
+        value={!timerIsOn && elapsedTime === 0 ? 30 : remainingPercentage}
         width={250}
         height={300}
         percent="%"
@@ -54,15 +60,6 @@ export function TimerDisplay({
           fontFamily: "Arial",
         }}
       />
-      {timerIsOn ? (
-        <button className={buttonClass} type="button" onClick={pauseTimer}>
-          Pause
-        </button>
-      ) : (
-        <button className={buttonClass} type="button" onClick={startTimer}>
-          Start
-        </button>
-      )}
     </div>
   );
 }

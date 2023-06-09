@@ -22,7 +22,7 @@ export function NewTodoList() {
   }
 
   return (
-    <div className="w-[475px] pt-10 flex flex-col">
+    <div className="w-[375px] pt-10 flex flex-col">
       <div
         className="text-lg font-bold border-b-2 border-b-slate-700"
         style={{}}
@@ -34,7 +34,7 @@ export function NewTodoList() {
         <AddTodoForm setShowAddTodoForm={setShowAddTodoForm} addTask={addTask}/>
       ) : (
         <button
-          className="rounded-md ring-1 ring-inset ring-gray-500 text-gray-500 hover:bg-gray-600 hover:text-slate-100 px-3 py-2 w-28 transition duration-200 ease-in-out self-center mt-4 mb-36"
+          className="rounded-md ring-1 ring-inset ring-gray-500 text-gray-500 hover:bg-gray-600 hover:text-slate-100 px-3 py-2 w-28 transition duration-200 ease-in-out self-center mt-4 mb-28"
           onClick={() => setShowAddTodoForm(true)}
         >
           Add a Task

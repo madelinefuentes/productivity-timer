@@ -22,7 +22,7 @@ export function AddTodoForm({ setShowAddTodoForm, addTask }) {
   return (
     <div className="flex flex-col mt-4 items-center">
       <input
-        className="w-8/12 h-9 rounded-md ring-1 ring-inset ring-slate-300 pl-3"
+        className="w-9/12 h-9 rounded-md ring-1 ring-inset ring-slate-300 pl-3"
         type="text"
         placeholder="Enter a Task to Work On"
         value={taskName}
