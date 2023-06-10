@@ -4,21 +4,26 @@ import { TodoListItem } from './TodoListItem';
 import { v4 as uuidv4 } from 'uuid';
 
 export function NewTodoList() {
-  const [todoList, setTodoList] = useState([]);
+  const [todoList, setTodoList] = useState(() => {
+    const savedTodoList = localStorage.getItem('todoList');
+    return savedTodoList ? JSON.parse(savedTodoList) : [];
+  });
   const [showAddTodoForm, setShowAddTodoForm] = useState(false);
 
   useEffect(() => {
-    if (localStorage.getItem("todoList")) {
-      setTodoList(JSON.parse(localStorage.getItem("todoList")));
-    }
-  }, []);
+    localStorage.setItem("todoList", JSON.stringify(todoList));
+  }, [todoList]);
 
   function addTask(taskName, pomodoroTarget) {
     const id = uuidv4();
-    setTodoList((todoList) => [
+    setTodoList(todoList => [
       ...todoList,
       { id, taskName, pomodoros: 0, pomodoroTarget, complete: false },
     ]);
+  }
+
+  function removeTask(taskId) {
+    setTodoList(todoList => todoList.filter(item => item.id !== taskId));
   }
 
   return (
@@ -29,7 +34,7 @@ export function NewTodoList() {
       >
         <h1>Todo List</h1>
       </div>
-      {todoList.map(todoListItem => <TodoListItem todoItem={todoListItem}/>)}
+      {todoList.map(todoListItem => <TodoListItem todoItem={todoListItem} removeTask={removeTask}/>)}
       {showAddTodoForm ? (
         <AddTodoForm setShowAddTodoForm={setShowAddTodoForm} addTask={addTask}/>
       ) : (

@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export function AddTodoForm({ setShowAddTodoForm, addTask }) {
   const [taskName, setTaskName] = useState(null);
   const [pomodoroTarget, setPomodoroTarget] = useState(1);
+  const isDisabled = taskName == null || taskName.length < 1 || pomodoroTarget < 1;
 
   function handleAddTask() {
     addTask(taskName, pomodoroTarget);
@@ -17,7 +18,18 @@ export function AddTodoForm({ setShowAddTodoForm, addTask }) {
     }
   }
 
-  const isDisabled = taskName == null || taskName.length < 1 || pomodoroTarget < 1;
+  // add handleAddTask as dependency
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (!isDisabled && event.key === 'Enter') {
+        handleAddTask();
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyPress);
+
+    return () => document.removeEventListener('keydown', handleKeyPress);
+  }, [isDisabled]);
 
   return (
     <div className="flex flex-col mt-4 items-center">
