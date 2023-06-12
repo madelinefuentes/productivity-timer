@@ -27,7 +27,7 @@ export function NewTimer({ isFocused, focusTime, breakTime }) {
     }
 
     return () => clearInterval(intervalId);
-  }, [timerIsOn, lastStartTime, sessionMinutes]);
+  }, [timerIsOn, lastStartTime]);
 
   function startTimer() {
     setLastStartTime(elapsedTime);

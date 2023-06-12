@@ -1,15 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+import { v4 as uuidv4 } from 'uuid';
 
-export function AddTodoForm({ setShowAddTodoForm, addTask }) {
+export function AddTodoForm({ setShowAddTodoForm, setTodoList }) {
   const [taskName, setTaskName] = useState(null);
   const [pomodoroTarget, setPomodoroTarget] = useState(1);
-  const isDisabled = taskName == null || taskName.length < 1 || pomodoroTarget < 1;
-
-  function handleAddTask() {
-    addTask(taskName, pomodoroTarget);
-    setTaskName('');
-    setPomodoroTarget(1);
-  }
+  const isDisabled =
+    taskName == null || taskName.length < 1 || pomodoroTarget < 1;
 
   function handlePomodoroChange(event) {
     const value = event.target.value;
@@ -18,18 +14,26 @@ export function AddTodoForm({ setShowAddTodoForm, addTask }) {
     }
   }
 
-  // add handleAddTask as dependency
+  const addTask= useCallback(() => {
+    const id = uuidv4();
+    setTodoList(todoList => [
+      ...todoList,
+      { id, taskName, pomodoros: 0, pomodoroTarget, complete: false },
+    ]);
+    setTaskName("");
+    setPomodoroTarget(1);
+  }, [pomodoroTarget, taskName, setTodoList]);
+
   useEffect(() => {
     const handleKeyPress = (event) => {
-      if (!isDisabled && event.key === 'Enter') {
-        handleAddTask();
+      if (!isDisabled && event.key === "Enter") {
+        addTask();
       }
     }
 
-    document.addEventListener('keydown', handleKeyPress);
-
-    return () => document.removeEventListener('keydown', handleKeyPress);
-  }, [isDisabled]);
+    document.addEventListener("keydown", handleKeyPress);
+    return () => document.removeEventListener("keydown", handleKeyPress);
+  }, [addTask, isDisabled]);
 
   return (
     <div className="flex flex-col mt-4 items-center">
@@ -62,7 +66,7 @@ export function AddTodoForm({ setShowAddTodoForm, addTask }) {
               ? "text-gray-300 ring-gray-300"
               : "text-gray-500 ring-gray-500 hover:bg-gray-600 hover:text-slate-100"
           }`}
-          onClick={handleAddTask}
+          onClick={addTask}
           disabled={isDisabled}
         >
           Add

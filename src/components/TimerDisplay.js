@@ -15,7 +15,7 @@ export function TimerDisplay({
     return `${minutes}:${secondsString}`;
   }
 
-  const currentTimeString = getFormattedTime(elapsedTime, sessionMinutes);
+  const currentTimeString = getFormattedTime(elapsedTime, sessionMinutes * 60);
   const remainingPercentage = Math.floor(
     (elapsedTime / (sessionMinutes * 60)) * 100
   );
