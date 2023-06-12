@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import {Row, Col, ButtonGroup, ToggleButton} from 'react-bootstrap';
 import LiquidFillGauge from 'react-liquid-gauge';
 import ls from 'local-storage';
 import TodoList from './TodoList';
@@ -177,7 +176,7 @@ function Timer(props) {
 
     return (
       <>
-      <Row style = {{paddingBottom: "50px"}}>
+      {/* <Row style = {{paddingBottom: "50px"}}>
         <Col style = {{paddingTop: '25px'}} xs="col-12" className="d-flex justify-content-center">
           <div>Today's Focus Time: {Math.floor(studyTime/3600)}h {Math.floor((studyTime % 3600)/60)}m</div>
         </Col>
@@ -263,7 +262,7 @@ function Timer(props) {
         completeTask = {completeTask}
         currentTask = {currentTask}
         updateCurrentTask = {updateCurrentTask}
-      />
+      /> */}
       </>
     );
 }

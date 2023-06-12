@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import {Row, Col} from 'react-bootstrap'; 
-import '../styling/TodoList.scss'
 
 const initialFormValues = {
   task: "",
@@ -43,7 +41,7 @@ function TodoList(props) {
 
   return (
     <>
-      <table style = {{marginLeft: "auto", marginRight: "auto"}} className="table col-sm-10 col-md-5">
+      {/* <table style = {{marginLeft: "auto", marginRight: "auto"}} className="table col-sm-10 col-md-5">
         <thead>
           <tr>
             <th><div style = {{borderBottom: '2px solid', fontSize: '18px'}}>Todo List</div></th>
@@ -135,7 +133,7 @@ function TodoList(props) {
                 </button>}</td>
             </tr>
         </tbody>
-      </table>
+      </table> */}
     </>
   );
 };
