@@ -16,11 +16,20 @@ export function NewTodoList() {
 
   function removeTask(taskId) {
     setTodoList((todoList) => todoList.filter((item) => item.id !== taskId));
+    if (taskId === currentTask) {
+      setCurrentTask(null);
+    }
   }
 
   return (
-    <div className="w-[375px] pt-10 flex flex-col">
-      {currentTask && <p>{`Current Task: ${todoList.find(item => item.id === currentTask).taskName}`}</p>}
+    <div className="w-[400px] flex flex-col">
+      {currentTask ? 
+  <h2 className="text-center py-6">
+    <span className="font-bold">Current Task: </span>
+    {todoList.find((item) => item.id === currentTask).taskName}
+  </h2>
+: <div className="h-14"></div>}
+
       <div
         className="text-lg font-bold border-b-2 border-b-slate-700"
         style={{}}
